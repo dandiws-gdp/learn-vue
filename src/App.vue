@@ -1,29 +1,32 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div id="app" class="px-60">
+    <div class="py-12">
+      <router-link class="px-2 py-2 hover:bg-gray-100 rounded-md" to="/"
+        >Todo List</router-link
+      >
+      <router-link class="px-2 py-2 hover:bg-gray-100 rounded-md" :to="`/users`"
+        >User</router-link
+      >
+      <router-link
+        class="px-2 py-2 hover:bg-gray-100 rounded-md"
+        :to="`/rockets`"
+        >Rockets</router-link
+      >
+      <router-link
+        class="px-2 py-2 hover:bg-gray-100 rounded-md"
+        :to="`/messages`"
+        >Messages</router-link
+      >
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 
 export default Vue.extend({
   name: "App",
-  components: {
-    HelloWorld,
-  },
+  computed: {},
 });
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
