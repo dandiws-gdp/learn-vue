@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form-control {
+  @apply px-3 py-2 rounded-md outline-none border bg-gray-50 border-gray-100 focus:border-gray-400 w-full
+}
+
+.btn {
+  @apply px-5 py-2 rounded-md border border-gray-100
+}
