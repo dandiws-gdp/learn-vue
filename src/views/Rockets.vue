@@ -76,32 +76,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import gql from "graphql-tag";
-
-const USERS_QUERY = gql`
-  query {
-    users {
-      id
-      name
-      rocket
-      timestamp
-      twitter
-    }
-  }
-`;
-const INSERT_USER_MUTATION = gql`
-  mutation insertUser($name: String!, $rocket: String!, $twitter: String!) {
-    insert_users(objects: { name: $name, rocket: $rocket, twitter: $twitter }) {
-      returning {
-        id
-        name
-        rocket
-        timestamp
-        twitter
-      }
-    }
-  }
-`;
+import {
+  USERS_QUERY,
+  INSERT_USER_MUTATION,
+  UsersQuery,
+  InsertUserMutation,
+  InsertUserVariables,
+} from "@/graphql/index";
 
 export default Vue.extend({
   data: function () {
@@ -115,23 +96,33 @@ export default Vue.extend({
   methods: {
     async addUser() {
       this.adding = true;
-      const result = await this.$apollo.mutate({
+      const result = await this.$apollo.mutate<
+        InsertUserMutation,
+        InsertUserVariables
+      >({
         mutation: INSERT_USER_MUTATION,
         variables: {
           name: this.name,
           twitter: this.twitter,
           rocket: this.rocket,
         },
-        update(cache, { data: { insert_users } }) {
-          const user = insert_users?.returning;
-          const data = cache.readQuery({
+        update(cache, { data }) {
+          if (!data) {
+            return;
+          }
+
+          const insertedUsers = data.insert_users.returning;
+          const usersCache = cache.readQuery<UsersQuery>({
             query: USERS_QUERY,
           });
-          data.users.push(user[0]);
-          cache.writeQuery({
-            query: USERS_QUERY,
-            data,
-          });
+
+          if (usersCache) {
+            usersCache.users.push(insertedUsers[0]);
+            cache.writeQuery<UsersQuery>({
+              query: USERS_QUERY,
+              data: usersCache,
+            });
+          }
         },
       });
 
